@@ -1,0 +1,22 @@
+{
+    "short_name": "yumi",
+    "name": "My restaurants review",
+    "scope": "/",
+    "icons": [{
+            "src": "restaurant-icon.png",
+            "type": "image/png",
+            "sizes": "192x192"
+        },
+        {
+            "src": "restaurant-icon.png",
+            "type": "image/png",
+            "sizes": "512x512"
+        }
+    ],
+    "display": "standalone",
+    "start_url": "/",
+    "background_color": "#2aadb7",
+    "theme_color": "#1c767d",
+    "lang": "en-US",
+    "orientation": "portrait"
+}

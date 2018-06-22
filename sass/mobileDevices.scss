@@ -1,0 +1,139 @@
+/* ============= MEDIA QUERY FOR MOBILE DEVICES - PHONES  ===============*/
+
+td,
+p {
+    font-size: 12pt;
+}
+
+.inside #maincontent {
+    display: block;
+    justify-content: center;
+}
+
+#breadcrumb li {
+    display: inline;
+    font-size: 1.125em;
+    min-width: 100%;
+}
+
+.inside #map-container {
+    background: blue none repeat scroll 0 0;
+    height: 400px;
+    right: 0;
+    top: 80px;
+    max-width: 100%;
+    min-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+}
+
+.inside #restaurant-container {
+    padding-top: 500px;
+}
+
+li {
+    border-bottom-right-radius: 30px;
+    -moz-border-radius-bottomright: 30px;
+    border-top-left-radius: 30px
+}
+
+#restaurant-name,
+#reviews-container h2 {
+    font-size: 14pt;
+}
+
+#reviews-container,
+#restaurant-container {
+    max-width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#reviews-list li {
+    background-color: #fff;
+    border: 2px solid #f3f3f3;
+    list-style-type: none;
+    margin: 0 0 30px;
+    overflow: hidden;
+    padding: 0px 0px 0px;
+    position: relative;
+    width: 90%;
+}
+
+#date {
+    margin-bottom: 10px;
+}
+
+li #reviewer-name,
+#date {
+    display: inline-block;
+    background-color: #333;
+    color: #ddd;
+    font-size: 12pt;
+    font-weight: 300;
+    width: 100%;
+    text-align: center;
+    margin: 0px -1px -1px;
+}
+
+#rating {
+    float: left;
+    background-color: #c10b0b;
+    border-bottom: 3px solid #eee;
+    color: #fff;
+    display: block;
+    font-size: 10pt;
+    margin: 16px 23px 11px;
+    padding: 7px 15px 5px;
+    text-align: left;
+    text-decoration: none;
+    text-transform: uppercase;
+}
+
+#comments {
+    display: block;
+    margin: 17px 3px -12px;
+    padding: 0px 20px 25px;
+    overflow: hidden;
+    width: 85%;
+}
+
+
+/* ======================= Restaurant Listing ======================*/
+
+.filter-options {
+    font-size: 1.1em;
+    display: inline-block;
+}
+
+.filter-options select {
+    width: 40vw;
+    font-size: 14px;
+    padding: 0 0;
+}
+
+#restaurants-list {
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#restaurants-list li {
+    display: block;
+    -moz-border-radius-bottomright: 30px;
+    border-top-left-radius: 30px;
+    border-bottom-right-radius: 30px;
+}
+
+#restaurants-list .restaurant-img {
+    padding-top: 3px;
+}
+
+#restaurants-list .viewDetails {
+    padding: 8px 30px 10px;
+}
+
+nav h1 a {
+    font-size: 16pt;
+}
