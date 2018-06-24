@@ -77,8 +77,10 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
 
     // fill reviews
     fillReviewsHTML();
-    return picture;
 
+
+    createReviewFormHTML();
+    return picture;
 }
 
 /**
@@ -126,7 +128,7 @@ fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => 
 }
 
 /**
- * Create all reviews HTML and add them to the webpage.
+ * Create all reviewForm HTML and add them to the webpage.
  */
 fillReviewsHTML = (reviews = self.restaurant.reviews) => {
     const container = document.getElementById('reviews-container');
@@ -160,18 +162,18 @@ createReviewHTML = (review) => {
 
 
     const date = document.createElement('p');
-    date.id = 'date';
+    date.id = 'review-date';
     date.innerHTML = review.date;
     li.appendChild(date);
 
 
     const rating = document.createElement('p');
-    rating.id = 'rating';
+    rating.id = 'reviewer-rating';
     rating.innerHTML = `Rating: ${review.rating}`;
     li.appendChild(rating);
 
     const comments = document.createElement('p');
-    comments.id = 'comments';
+    comments.id = 'reviewer-comments';
     comments.innerHTML = review.comments;
     li.appendChild(comments);
 
@@ -204,64 +206,7 @@ getParameterByName = (name, url) => {
     return decodeURIComponent(results[2].replace(/\+/g, ' '));
 }
 
-/*
-const showMapButton = document.createElement('div');
-showMapButton.setAttribute("id", "button");
-const header = document.querySelector('header');
-header.append(showMapButton);
 
-showMapButton.setAttribute('id', 'show-map');
-showMapButton.setAttribute('role', 'button');
-showMapButton.setAttribute('tabindex', '0');
-showMapButton.setAttribute("aria-pressed", "false");
-
-const mapToHide = document.getElementById("map-container");
-mapToHide.style.display = "none";
-
-if (mapToHide.style.display == "none") {
-    showMapButton.textContent = 'Map view' || mapToHide.style.display == "flex";
-}
-
-showMapButton.setAttribute('aria-label', showMapButton.textContent);
-
-showMeMap = () => {
-    showMapButton.focus();
-    showMapButton.setAttribute("aria-pressed", "true");
-
-    if (mapToHide.style.display == "none") {
-        mapToHide.style.display = "flex";
-        showMapButton.style.display = "none";
-    } else {
-        mapToHide.style.display = "none";
-    }
-};
-
-/**
- * @description Add event listeners to the various buttons
- * @param keydown - Keydown event
- * @param function
- */
-/*
-// Define values for keycodes
-const VK_ENTER = 13;
-const VK_SPACE = 32;
-
-showMapButton.addEventListener('keydown', function(event) {
-    switch (event.keyCode) {
-        case VK_SPACE:
-        case VK_ENTER:
-            {
-
-                showMeMap();
-                event.stopPropagation();
-                event.preventDefault();
-                break;
-            }
-    }
-});
-
-showMapButton.addEventListener('click', showMeMap);
-*/
 /**
  * @description Create a div for skip to the main content :
  * <div class='invisible' role='complementary'></div>
@@ -281,3 +226,82 @@ linkMain.setAttribute('aria-label', linkMain.textContent);
 linkMain.className = 'skip-main';
 
 skipNav.prepend(linkMain);
+
+/**
+ * @description Create a div for writing a review
+ */
+createReviewFormHTML = (id = self.restaurant.id) => {
+    const formContainer = document.getElementById('review-form');
+
+    const createform = document.createElement('form');
+    createform.setAttribute('id', 'restoForm');
+    createform.setAttribute('onsubmit', `DBHelper.saveOfflineReview(event, this);`);
+
+    const heading = document.createElement('h2');
+    heading.innerHTML = 'Write A Review';
+    createform.appendChild(heading);
+
+    const hiddenRestaurantId = document.createElement('input');
+    hiddenRestaurantId.setAttribute('type', 'hidden');
+    hiddenRestaurantId.setAttribute('name', 'id');
+    hiddenRestaurantId.setAttribute('value', `${id}`);
+    createform.appendChild(hiddenRestaurantId);
+
+    const hiddenReviewDate = document.createElement('input');
+    unixTime = Math.round(Date.now());
+    hiddenReviewDate.setAttribute('type', 'hidden');
+    hiddenReviewDate.setAttribute('name', 'ddate');
+    hiddenReviewDate.setAttribute('value', `${unixTime}`);
+    createform.appendChild(hiddenReviewDate);
+
+    const hiddenFlag = document.createElement('input');
+    hiddenFlag.setAttribute('type', 'hidden');
+    hiddenFlag.setAttribute('name', 'dflag');
+    hiddenFlag.setAttribute('value', 'unsynced');
+    createform.appendChild(hiddenFlag);
+
+    const name = document.createElement('p');
+    namelabel.innerHTML = 'Name: ';
+    createform.appendChild(name);
+
+    const inputelement = document.createElement('input');
+    inputelement.setAttribute('type', 'text');
+    inputelement.setAttribute('name', 'dname');
+    inputelement.setAttribute('placeholder', 'eg. James Bond');
+    inputelement.setAttribute('aria-label', 'reviewer name');
+    createform.appendChild(inputelement);
+
+
+    const ratingelement = document.createElement('ul');
+    ratingelement.innerHTML = 'Rate: ';
+    for (var i = 0; i < 5; i++) {
+        const stars = document.createElement('li');
+        stars.className = 'fontawesome-star-empty';
+        ratingelement.appendChild(stars);
+    }
+    createform.appendChild(ratingelement);
+
+    const ratingbreak = document.createElement('br');
+    createform.appendChild(ratingbreak);
+
+    const review = document.createElement('p');
+    reviewlabel.innerHTML = 'Review: ';
+    createform.appendChild(review);
+
+    const texareaelement = document.createElement('textarea');
+    texareaelement.setAttribute('name', 'dreview');
+    texareaelement.setAttribute('placeholder', 'Please write your review');
+    texareaelement.setAttribute('aria-label', 'restaurant review');
+    createform.appendChild(texareaelement);
+
+    const reviewbreak = document.createElement('br');
+    createform.appendChild(reviewbreak);
+
+    const submitelement = document.createElement('input');
+    submitelement.setAttribute('type', 'submit');
+    submitelement.setAttribute('name', 'dsubmit');
+    submitelement.setAttribute('value', 'Submit');
+    createform.appendChild(submitelement);
+
+    formContainer.appendChild(createform);
+}

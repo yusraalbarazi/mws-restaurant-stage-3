@@ -217,5 +217,27 @@ class DBHelper {
         });
         return marker;
     }
+    static toggleFavorite(id, condition) {
+            fetch(`http://localhost:1337/restaurants/${id}/?is_favorite=${condition}`, { method: 'POST' })
+                .then(res => console.log('restaurant favorite has been updated'))
+                .then(IDBHelper.idbToggleFavorite(id, condition))
+                .then(location.reload());
+        }
+        /**
+         * Add or Remove is_favorite on the server
+         */
+    static saveOfflineReview(event, form) {
+        event.preventDefault();
+        const body = {
+            "restaurant_id": parseInt(form.id.value),
+            "name": form.dname.value,
+            "rating": parseInt(form.drating.value),
+            "comments": form.dreview.value,
+            "updatedAt": parseInt(form.ddate.value),
+            "flag": form.dflag.value,
+        };
+        IDBHelper.idbPostReview(form.id.value, body);
+        location.reload();
+    }
 
 }

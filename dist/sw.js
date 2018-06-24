@@ -37,17 +37,7 @@ self.addEventListener('install', event => {
  */
 self.addEventListener('activate', event => {
 
-    console.log('ServiceWorker Activated');
-    event.waitUntil(
-        caches.keys().then(cacheNames => {
-            return Promise.all(cacheNames.map(thisCacheName => {
-                if (thisCacheName !== cacheName) {
-
-                    return caches.delete(thisCacheName);
-                }
-            }));
-        })
-    );
+    event.waitUntil(self.clients.claim());
 });
 
 
@@ -55,18 +45,10 @@ self.addEventListener('activate', event => {
  * - Fetch event
  */
 self.addEventListener('fetch', event => {
-
     event.respondWith(
-        caches.open(cacheName).then(cache => {
-            return cache.match(event.request).then(response => {
-                console.log("ServiceWorker Found in Cache", event.request.url, response);
-                return response || fetch(event.request).then(response => {
-                    console.log('ServiceWorker not Found in Cache, need to search in the network', event.request.url);
-                    cache.put(event.request, response.clone());
-                    console.log('ServiceWorker New Data Cached', event.request.url);
-                    return response;
-                });
-            });
+        caches.match(event.request, { ignoreSearch: true }).then(response => {
+            return response || fetch(event.request);
         })
+        .catch(err => console.log(err, event.request))
     );
 });

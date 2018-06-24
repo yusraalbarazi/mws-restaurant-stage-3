@@ -406,3 +406,19 @@ nav h1 a {
 #restaurant-hours td {
     color: #666;
 }
+
+@import url(http://weloveiconfonts.com/api/?family=fontawesome);
+
+/* fontawesome */
+
+[class*="fontawesome-"]:before {
+    font-family: 'FontAwesome', sans-serif;
+    display: inline;
+    text-shadow: 3px 3px 3px;
+}
+
+[class*="fontawesome-"] {
+    list-style: none;
+    display: inline;
+    margin-left: 7px;
+}
