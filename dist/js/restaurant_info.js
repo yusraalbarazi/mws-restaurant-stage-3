@@ -238,7 +238,7 @@ createReviewFormHTML = (id = self.restaurant.id) => {
     createform.setAttribute('onsubmit', `DBHelper.saveOfflineReview(event, this);`);
 
     const heading = document.createElement('h2');
-    heading.innerHTML = 'Write A Review';
+    heading.innerHTML = 'Write A Review:';
     createform.appendChild(heading);
 
     const hiddenRestaurantId = document.createElement('input');
@@ -261,31 +261,34 @@ createReviewFormHTML = (id = self.restaurant.id) => {
     createform.appendChild(hiddenFlag);
 
     const name = document.createElement('p');
-    namelabel.innerHTML = 'Name: ';
+    name.innerHTML = 'Name: ';
     createform.appendChild(name);
 
     const inputelement = document.createElement('input');
     inputelement.setAttribute('type', 'text');
     inputelement.setAttribute('name', 'dname');
-    inputelement.setAttribute('placeholder', 'eg. James Bond');
+    inputelement.setAttribute('placeholder', 'eg. Kevin Mitnick');
     inputelement.setAttribute('aria-label', 'reviewer name');
     createform.appendChild(inputelement);
 
-
-    const ratingelement = document.createElement('ul');
+    const ratingelement = document.createElement('p');
     ratingelement.innerHTML = 'Rate: ';
+    createform.appendChild(ratingelement);
+
+
     for (var i = 0; i < 5; i++) {
-        const stars = document.createElement('li');
-        stars.className = 'fontawesome-star-empty';
+        const stars = document.createElement('span');
+        stars.id = 'stars';
+        stars.innerHTML = '&#10025';
         ratingelement.appendChild(stars);
     }
-    createform.appendChild(ratingelement);
+
 
     const ratingbreak = document.createElement('br');
     createform.appendChild(ratingbreak);
 
     const review = document.createElement('p');
-    reviewlabel.innerHTML = 'Review: ';
+    review.innerHTML = 'Review: ';
     createform.appendChild(review);
 
     const texareaelement = document.createElement('textarea');
@@ -297,11 +300,10 @@ createReviewFormHTML = (id = self.restaurant.id) => {
     const reviewbreak = document.createElement('br');
     createform.appendChild(reviewbreak);
 
-    const submitelement = document.createElement('input');
-    submitelement.setAttribute('type', 'submit');
-    submitelement.setAttribute('name', 'dsubmit');
-    submitelement.setAttribute('value', 'Submit');
-    createform.appendChild(submitelement);
+    const more = document.createElement('a');
+    more.innerHTML = 'Comment';
+    more.setAttribute('aria-label', 'Save comment')
+    createform.appendChild(more);
 
     formContainer.appendChild(createform);
 }

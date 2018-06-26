@@ -274,13 +274,14 @@ nav h1 a {
     font-size: 11pt;
 }
 
-.viewDetails {
+.viewDetails,
+#restoForm a {
     background-color: #c10b0b;
     border-bottom: 3px solid #eee;
     color: #fff;
     display: inline-block;
     font-size: 11pt;
-    margin: 15px 0 0;
+    margin: 15px 12px 0;
     padding: 8px 50px 10px;
     text-align: center;
     text-decoration: none;
@@ -367,18 +368,21 @@ nav h1 a {
 }
 
 #restaurant-container,
-#reviews-container {
+#reviews-container,
+#review-form-container {
     border-bottom: 1px solid #d9d9d9;
     border-top: 1px solid #fff;
     padding: 140px 40px 30px;
     max-width: 50%;
 }
 
-#reviews-container {
-    padding: 30px 40px 80px;
+#reviews-container,
+#review-form-container {
+    padding: 30px 40px 15px;
 }
 
-#reviews-container h2 {
+#reviews-container h2,
+#restoForm h2 {
     color: #c10b0b;
     font-size: 16pt;
     font-weight: 300;
@@ -403,22 +407,44 @@ nav h1 a {
     width: 85%;
 }
 
+#restoForm textarea {
+    border: 2px solid #f3f3f3;
+    height: 100pt;
+    width: 85%;
+    text-indent: 3px;
+}
+
+#restoForm input {
+    border: 2px solid #f3f3f3;
+    height: 22pt;
+    text-indent: 3px;
+}
+
 #restaurant-hours td {
     color: #666;
 }
 
-@import url(http://weloveiconfonts.com/api/?family=fontawesome);
 
 /* fontawesome */
 
-[class*="fontawesome-"]:before {
-    font-family: 'FontAwesome', sans-serif;
-    display: inline;
-    text-shadow: 3px 3px 3px;
-}
-
-[class*="fontawesome-"] {
+#stars {
     list-style: none;
     display: inline;
-    margin-left: 6px;
+    margin-left: 2px;
+    text-shadow: 3px 3px 3px;
+    font-size: 21px;
+}
+
+#stars:hover {
+    color: rgb(196, 135, 22)
+}
+
+#restoForm ul,
+#restoForm p,
+#restoForm input,
+#restoForm textarea,
+{
+    font-size: 11pt;
+    padding: 0px;
+    margin: 11px 0 -3px 10px;
 }
