@@ -475,6 +475,14 @@ nav h1 a {
     color: #a70b0b;
 }
 
+.select-group {
+    display: inline-flex;
+    color: white;
+    color: white;
+    font-size: 15px;
+    font-weight: normal;
+}
+
 @media screen and (max-width:421px) {
     .main #map {
         display: none;

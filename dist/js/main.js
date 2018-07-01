@@ -95,16 +95,17 @@ window.initMap = () => {
 updateRestaurants = () => {
     const cSelect = document.getElementById('cuisines-select');
     const nSelect = document.getElementById('neighborhoods-select');
+    const fSelect = document.getElementById('favorites');
 
     const cIndex = cSelect.selectedIndex;
-
     const nIndex = nSelect.selectedIndex;
+    const fValue = fSelect.checked;
 
     const cuisine = cSelect[cIndex].value;
-
     const neighborhood = nSelect[nIndex].value;
+    const favorite = fValue;
 
-    DBHelper.fetchRestaurantByCuisineAndNeighborhood(cuisine, neighborhood, (error, restaurants) => {
+    DBHelper.fetchRestaurantByCuisineAndNeighborhood(cuisine, neighborhood, favorite, (error, restaurants) => {
         if (error) { // Got an error!
             console.error(error);
         } else {
