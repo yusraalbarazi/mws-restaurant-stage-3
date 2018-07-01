@@ -1,35 +1,5 @@
-# Local Development API Server
-## Usage
-#### Get Restaurants
-```
-curl "http://localhost:1337/restaurants"
-```
-#### Get Restaurants by id
-````
-curl "http://localhost:1337/restaurants/{3}"
-````
-
-## Architecture
-Local server
-- Node.js
-- Sails.js
-
-## Contributors
-
-- [Brandy Lee Camacho - Technical Project Manager](mailto:brandy.camacho@udacity.com)
-- [David Harris - Web Services Lead](mailto:david.harris@udacity.com)
-- [Omar Albeik - Frontend engineer](mailto:omaralbeik@gmail.com)
-
-## Getting Started
-
-### Development local API Server
-_Location of server = /server_
-Server depends on [node.js LTS Version: v6.11.2 ](https://nodejs.org/en/download/), [npm](https://www.npmjs.com/get-npm), and [sails.js](http://sailsjs.com/)
-Please make sure you have these installed before proceeding forward.
-
-Great, you are ready to proceed forward; awesome!
-
-Let's start with running commands in your terminal, known as command line interface (CLI)
+###### How to Start the server
+``` In the terminal```
 
 ###### Install project dependancies
 ```Install project dependancies
@@ -40,15 +10,31 @@ Let's start with running commands in your terminal, known as command line interf
 # npm i sails -g
 ```
 ###### Start the server
-```Start server
-# node server
+``` 
+$ cd mws-restaurant-stage-3
+$ node server
 ```
-### You should now have access to your API server environment
-debug: Environment : development
-debug: Port        : 1337
+
+###### How to start client
+gulpfile serves the content on port 8000. To start it, you need to run gulp in the root directory.
+
+``` In the terminal
+$ cd mws-restaurant-stage-3
+$ gulp
+
+``` 
+
+# Lighthouse Scores:
+
+Progressive Web App: 91
+Performance: >90
+Accessibility: >94
+
+https://github.com/yusraalbarazi/mws-restaurant-stage-3/blob/master/Restaurant-Review.jpg
+
+https://github.com/yusraalbarazi/mws-restaurant-stage-3/blob/master/restaurant-Review2.jpg
 
 
-## Endpoints
 
 ### GET Endpoints
 
@@ -86,60 +72,3 @@ http://localhost:1337/reviews/<review_id>
 ```
 http://localhost:1337/reviews/?restaurant_id=<restaurant_id>
 ```
-
-
-### POST Endpoints
-
-#### Create a new restaurant review
-```
-http://localhost:1337/reviews/
-```
-
-###### Parameters
-```
-{
-    "restaurant_id": <restaurant_id>,
-    "name": <reviewer_name>,
-    "rating": <rating>,
-    "comments": <comment_text>
-}
-```
-
-
-### PUT Endpoints
-
-#### Favorite a restaurant
-```
-http://localhost:1337/restaurants/<restaurant_id>/?is_favorite=true
-```
-
-#### Unfavorite a restaurant
-```
-http://localhost:1337/restaurants/<restaurant_id>/?is_favorite=false
-```
-
-#### Update a restaurant review
-```
-http://localhost:1337/reviews/<review_id>
-```
-
-###### Parameters
-```
-{
-    "name": <reviewer_name>,
-    "rating": <rating>,
-    "comments": <comment_text>
-}
-```
-
-
-### DELETE Endpoints
-
-#### Delete a restaurant review
-```
-http://localhost:1337/reviews/<review_id>
-```
-
-
-If you find a bug in the source code or a mistake in the documentation, you can help us by
-submitting an issue to our [Waffle Dashboard](https://waffle.io/udacity/mwnd-issues). Even better you can submit a Pull Request with a fix :)
