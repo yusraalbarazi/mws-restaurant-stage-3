@@ -533,16 +533,6 @@
         "flag": "unsynced",
         "id": 31
       },
-      {
-        "restaurant_id": 4,
-        "name": "ysra",
-        "date": "July 01, 2018",
-        "rating": 2,
-        "comments": "online test",
-        "createdAt": "2018-07-01T07:57:14.223Z",
-        "updatedAt": "2018-07-01T07:57:14.223Z",
-        "id": 32
-      }
     ]
   },
   "schema": {
@@ -597,7 +587,7 @@
       "id": 10
     },
     "reviews": {
-      "id": 32
+      "id": 34
     }
   }
 }
