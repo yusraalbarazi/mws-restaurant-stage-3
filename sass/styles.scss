@@ -258,7 +258,8 @@ nav h1 a {
     min-width: 100%;
 }
 
-#restaurants-list li h3 {
+#restaurants-list li h3,
+#reviews-container h2 {
     color: #c10b0b;
     font-family: Arial, sans-serif;
     font-size: 14pt;
@@ -275,7 +276,7 @@ nav h1 a {
 }
 
 .viewDetails,
-#restoForm a {
+#review-form #submit {
     background-color: #c10b0b;
     border-bottom: 3px solid #eee;
     color: #fff;
@@ -286,6 +287,10 @@ nav h1 a {
     text-align: center;
     text-decoration: none;
     text-transform: uppercase;
+}
+
+#review-form #submit {
+    margin: 0 0 0;
 }
 
 #restaurants-list>li:focus {
@@ -381,8 +386,8 @@ nav h1 a {
     padding: 30px 40px 15px;
 }
 
-#reviews-container h2,
-#restoForm h2 {
+#review-form-container h2,
+{
     color: #c10b0b;
     font-size: 16pt;
     font-weight: 300;
@@ -407,14 +412,16 @@ nav h1 a {
     width: 85%;
 }
 
-#restoForm textarea {
+#review-form #comment {
     border: 2px solid #f3f3f3;
     height: 100pt;
-    width: 85%;
+    width: 89%;
     text-indent: 3px;
+    display: inherit;
+    margin-left: -2px;
 }
 
-#restoForm input {
+#review-form input {
     border: 2px solid #f3f3f3;
     height: 22pt;
     text-indent: 3px;
@@ -439,6 +446,10 @@ nav h1 a {
     color: rgb(196, 135, 22)
 }
 
+#stars::before {
+    color: rgb(196, 135, 22)
+}
+
 #restoForm ul,
 #restoForm p,
 #restoForm input,
@@ -447,4 +458,108 @@ nav h1 a {
     font-size: 11pt;
     padding: 0px;
     margin: 11px 0 -3px 10px;
+}
+
+.map-toggle button {
+    display: none;
+}
+
+#button-favorite {
+    background-color: transparent;
+    border-color: transparent;
+    font-size: 12pt;
+    padding: 0px;
+}
+
+#button-favorite .far.fa-heart:hover {
+    color: #a70b0b;
+}
+
+@media screen and (max-width:421px) {
+    .main #map {
+        display: none;
+    }
+    .map-toggle {
+        padding-top: 31px;
+        padding-right: 10px;
+        width: 60px;
+        height: 50px;
+        position: absolute;
+        top: 0;
+        left: 2px;
+    }
+    .map-toggle button {
+        background-color: transparent;
+        background-image: url('/img/GoogleMaps.png');
+        background-size: 47px;
+        background-repeat: no-repeat;
+        border-color: transparent;
+        display: block;
+        cursor: pointer;
+        width: 48px;
+        height: 48px;
+    }
+    .main .skip-main {
+        display: none;
+    }
+}
+
+.rating-container {
+    overflow: hidden;
+    margin: 10px 0;
+}
+
+.rating-container p {
+    vertical-align: middle;
+    display: inline-block;
+}
+
+// Stars Div
+.rating {
+    padding: 0;
+    border: none;
+    unicode-bidi: bidi-override;
+    direction: rtl;
+    text-align: left;
+    user-select: none;
+    cursor: pointer;
+    display: inline-block;
+    text-shadow: 3px 3px 3px;
+    font-size: 21px;
+}
+
+// The Stars
+.rating>label {
+    display: inline-block;
+    position: relative;
+    width: 1.1em;
+}
+
+.rating>input[type=radio]:focus+label {
+    border: 1px solid #f18200;
+}
+
+.rating>*:hover,
+.rating>*:hover~label,
+.rating:not(:hover)>input:checked~label {
+    color: transparent;
+    cursor: inherit;
+}
+
+.rating>*:hover:before,
+.rating>*:hover~label:before,
+.rating:not(:hover)>input:checked~label:before {
+    content: '✩';
+    position: absolute;
+    left: 0;
+    color: rgb(196, 135, 22);
+}
+
+.rating>input {
+    position: relative;
+    transform: scale(3);
+    top: -0.5em;
+    margin-left: -2.5em;
+    z-index: 2;
+    opacity: 0;
 }

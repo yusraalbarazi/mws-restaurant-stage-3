@@ -6,7 +6,14 @@ const cacheFiles = [
     './js/swController.js',
     './js/main.js',
     './js/restaurant_info.js',
+    '/js/idb.js',
+    '/js/dbhelper.js',
     './css/styles.css',
+    './css/laptopDevices.css',
+    './css/mobileDevices.css',
+    './css/tabletDevices.css',
+    './css/wideDevices.css',
+    './css/notification.css',
     './img/1_medium.jpg',
     './img/2_medium.jpg',
     './img/3_medium.jpg',
@@ -51,4 +58,10 @@ self.addEventListener('fetch', event => {
         })
         .catch(err => console.log(err, event.request))
     );
+})
+
+self.addEventListener('sync', function(event) {
+    if (event.tag === 'review-sync') {
+        event.waitUntil(DBHelper.waitingReviews());
+    }
 });

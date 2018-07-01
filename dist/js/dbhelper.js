@@ -8,10 +8,10 @@ class DBHelper {
      * Change this to restaurants.json file location on your server.
      */
     static get DATABASE_URL() {
-            const port = 1337 // Change this to your server port
-            return `http://localhost:${port}/restaurants`;
-        }
-        /** neeeeeeeeeeeeeeeeeeeeeeew */
+        const port = 1337 // Change this to your server port
+        return `http://localhost:${port}/restaurants`;
+    }
+
 
     static openDatabase() {
         // If the browser doesn't support service worker,
@@ -25,6 +25,10 @@ class DBHelper {
                 keyPath: 'id'
             });
             store.createIndex('by-id', 'id');
+
+            var reviewSstore = upgradeDb.createObjectStore('restaurantReview', { keyPath: 'id' });
+            reviewSstore.createIndex('restaurant_id', 'restaurant_id');
+            //var offlineReview = upgradeDb.createObjectStore('review2', { keyPath: 'updatedAt' });
         });
     }
 
@@ -41,6 +45,7 @@ class DBHelper {
         });
     }
 
+
     static addRestaurantsFromAPI() {
         return fetch(DBHelper.DATABASE_URL)
             .then(function(response) {
@@ -52,13 +57,163 @@ class DBHelper {
     }
 
     static getCachedRestaurants() {
+            return DBHelper.openDatabase().then(function(db) {
+                if (!db) return;
+
+                var store = db.transaction('restaurantDb').objectStore('restaurantDb');
+                return store.getAll();
+            });
+        }
+        /** @description Fetching reviews from API 
+         * 
+         */
+    static saveReviewsToDatabase(data) {
+        return DBHelper.openDatabase().then(function(db) {
+            if (!db) return;
+            // 3. Put fetched reviews into IDB
+            const tx = db.transaction('restaurantReview', 'readwrite');
+            const store = tx.objectStore('restaurantReview');
+            data.forEach(review => {
+                store.put(review);
+            });
+            return tx.complete;
+        });
+    }
+
+    static addReviewsFromAPI(id) {
+
+        fetch(`http://localhost:1337/reviews/?restaurant_id=${id}`)
+            .then(response => {
+                return response.json();
+            })
+            .then(reviews => {
+                DBHelper.saveReviewsToDatabase(reviews);
+                return reviews;
+            });
+    }
+    static fetchReviewsForRestaurant(id, callback) {
+
+        return DBHelper.openDatabase().then(function(db) {
+            if (!db) return;
+            // 1. Check if there are reviews in the IDB 
+            const tx = db.transaction('restaurantReview');
+            const index = tx.objectStore('restaurantReview').index('restaurant_id');
+
+            index.getAll(id).then(results => {
+                if (results && results.length > 0) {
+                    // Continue with reviews from IDB
+                    console.log("Reviews already fetched");
+                    callback(null, results);
+                } else {
+                    // 2. If there are no reviews in the IDB, fetch reviews from the network
+                    fetch(`http://localhost:1337/reviews/?restaurant_id=${id}`)
+                        .then(response => {
+                            return response.json();
+                        })
+                        .then(reviews => {
+                            return DBHelper.openDatabase().then(function(db) {
+                                if (!db) return;
+                                // 3. Put fetched reviews into IDB
+                                DBHelper.saveReviewsToDatabase(reviews);
+
+                                callback(null, reviews);
+                            });
+                        })
+                        .catch(error => {
+                            // Unable to fetch reviews from network
+                            callback(error, null);
+                        })
+                }
+            })
+        });
+    }
+    static addReviewToDToDatabase(data) {
         return DBHelper.openDatabase().then(function(db) {
             if (!db) return;
 
-            var store = db.transaction('restaurantDb').objectStore('restaurantDb');
-            return store.getAll();
-        });
+            var tx = db.transaction('restaurantReview', 'readwrite');
+            var store = tx.objectStore('restaurantReview');
+            store.put(data);
+
+            return tx.complete;
+        })
     }
+
+    static readAllIdbData() {
+        return DBHelper.openDatabase().then(function(db) {
+            if (!db) return;
+            return db.transaction('restaurantReview')
+                .objectStore('restaurantReview').getAll();
+        })
+    }
+    static DeleteAllIdbData(body) {
+        return DBHelper.openDatabase().then(function(db) {
+            if (!db) return;
+            var tx = db.transaction('review2', 'readwrite');
+            var store = tx.objectStore('review2');
+            store.delete(body.updatedAt);
+        })
+    }
+    static postReview(body) {
+
+        fetch(`http://localhost:1337/reviews/`, {
+                method: 'POST',
+                body: JSON.stringify(body),
+                headers: {
+                    'Accept': 'application/json , text/plain',
+                    'content-type': 'application/json'
+                }
+            })
+            .then(response => {
+                response.json()
+                    .then(data => {
+                        DBHelper.addReviewToDToDatabase(data);
+                    })
+            })
+            .catch(error => {
+                console.log(error);
+            });
+
+    }
+
+
+    static waitingReviews() {
+        DBHelper.readAllIdbData()
+            .then(data => {
+                if (data && data.length == 0) {
+                    if (data.flag == 'unsynced') {
+
+                        data.forEach(reviews => {
+
+                            const body = {
+                                "restaurant_id": reviews.restaurant_id,
+                                "name": reviews.name,
+                                "date": reviews.date,
+                                "rating": reviews.rating,
+                                "comments": reviews.comments
+                            };
+                            fetch(`http://localhost:1337/reviews/`, {
+                                method: 'post',
+                                headers: {
+                                    'Accept': 'application/json',
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify(body),
+                            }).then(res => console.log('new review has been synced to the server', res.json()))
+
+                        });
+                    }
+                } else {
+
+                    console.log("everything is good ");
+                }
+
+            });
+
+    }
+
+
+
 
     /**
      * Fetch all restaurants.
@@ -217,27 +372,26 @@ class DBHelper {
         });
         return marker;
     }
+
+
     static toggleFavorite(id, condition) {
-            fetch(`http://localhost:1337/restaurants/${id}/?is_favorite=${condition}`, { method: 'POST' })
-                .then(res => console.log('restaurant favorite has been updated'))
-                .then(IDBHelper.idbToggleFavorite(id, condition))
-                .then(location.reload());
-        }
-        /**
-         * Add or Remove is_favorite on the server
-         */
-    static saveOfflineReview(event, form) {
-        event.preventDefault();
-        const body = {
-            "restaurant_id": parseInt(form.id.value),
-            "name": form.dname.value,
-            "rating": parseInt(form.drating.value),
-            "comments": form.dreview.value,
-            "updatedAt": parseInt(form.ddate.value),
-            "flag": form.dflag.value,
-        };
-        IDBHelper.idbPostReview(form.id.value, body);
-        location.reload();
+        fetch(`http://localhost:1337/restaurants/${id}/?is_favorite=${condition}`, { method: 'PUT' })
+            .then(res => { return res.json() })
+            .then(data => {
+                return DBHelper.openDatabase().then(function(db) {
+                        if (!db) return;
+
+                        var tx = db.transaction('restaurantDb', 'readwrite');
+                        var store = tx.objectStore('restaurantDb');
+
+                        store.put(data);
+
+                        return tx.complete;
+                    })
+                    .then(location.reload());
+            })
     }
+
+
 
 }

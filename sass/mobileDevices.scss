@@ -138,3 +138,33 @@ li #reviewer-name,
 nav h1 a {
     font-size: 16pt;
 }
+
+.main #map {
+    display: none;
+}
+
+.map-toggle {
+    padding-top: 31px;
+    padding-right: 10px;
+    width: 60px;
+    height: 50px;
+    position: absolute;
+    top: 0;
+    left: 2px;
+}
+
+.map-toggle button {
+    background-color: transparent;
+    background-image: url('/img/GoogleMaps.png');
+    background-size: 47px;
+    background-repeat: no-repeat;
+    border-color: transparent;
+    display: block;
+    cursor: pointer;
+    width: 48px;
+    height: 48px;
+}
+
+.main .skip-main {
+    display: none;
+}

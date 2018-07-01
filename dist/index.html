@@ -17,18 +17,20 @@
     <title>Restaurant Reviews</title>
 </head>
 
-<body>
+<body class="main">
     <header>
         <nav>
             <h1><a href="/">Restaurant Reviews</a></h1>
         </nav>
+        <div class="map-toggle">
+            <button onclick="toggleMap()" title="Toggle map" aria-label="Toggle restaurants map"></button>
+        </div>
     </header>
 
     <main id="maincontent" role="main" aria-label="main content">
 
-        <section id="map-container" role="application" aria-label="Google Map">
+        <section id="map-container" role="application" aria-hidden="true" aria-label="Google Map">
             <div id="map"></div>
-
         </section>
         <section>
             <div class="filter-options">

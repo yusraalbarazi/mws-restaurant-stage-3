@@ -244,3 +244,11 @@ linkNeighborhoods.setAttribute('aria-label', linkNeighborhoods.textContent);
 linkNeighborhoods.className = 'skip-main';
 
 skipNav.prepend(linkNeighborhoods);
+
+/**
+ * toggle map to hide the map in mobile view to increase the performance
+ */
+window.toggleMap = () => {
+    const currentState = document.getElementById('map').style.display;
+    document.getElementById('map').style.display = currentState === 'none' ? 'block' : 'none';
+}

@@ -8,6 +8,7 @@
     <meta name="application-name" content="Restaurant Reviews around the world. Written by food lovers only.">
     <!-- Normalize.css for better cross-browser consistency -->
     <link rel="stylesheet" src="//normalize-css.googlecode.com/svn/trunk/normalize.css" />
+    <!--link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous"-->
     <!-- Main CSS file -->
     <link rel="stylesheet" href="css/styles.css" type="text/css">
     <link rel="stylesheet" media="screen and (min-width:500px) and (max-width:600px)" href="css/mobileDevices.css">
@@ -15,6 +16,7 @@
     <link rel="stylesheet" media="screen and (min-width:601px) and (max-width:1149px)" href="css/tabletDevices.css">
     <link rel="stylesheet" media="screen and (min-width:1150px)" href="css/laptopDevices.css">
     <link rel="stylesheet" media="screen and (min-width:2500px)" href="css/wideDevices.css">
+    <link rel="stylesheet" href="css/notification.css">
     <link rel="icon" type="image/png" href="restaurant-icon.png" sizes="192x192">
     <link rel="manifest" href="/manifest.json">
     <title>Restaurant Info</title>
@@ -46,6 +48,7 @@
         <!-- Beginning restaurant -->
         <section id="restaurant-container" role="contentinfo" aria-label="restaurant information">
             <h2 id="restaurant-name"></h2>
+            <div id="restaurant-favorite"></div>
             <img id="restaurant-img">
             <p id="restaurant-cuisine"></p>
             <p id="restaurant-address"></p>
@@ -59,9 +62,36 @@
         <!-- End reviews -->
         <!-- Beginning review form -->
         <section id="review-form-container">
-            <div id="review-form"></div>
+            <h2 id="group_label_1">Write A Review</h2>
+            <form action="" id="review-form" role="form" aria-label="Write a review">
+                <label for="name">Name: </label>
+                <input type="text" placeholder="eg. Kevin Mitnick" aria-label="Reviewer Normalize" id="name" required>
+                <div class="rating-container">
+                    <p>Rate:
+                        <div class="rating" role="radiogroup" aria-labelledby="group_label_1">
+                            <input type="radio" id="review-rating5" name="rating" value="5" aria-checked="false" tabindex="-1" aria-label="Dissatisfied">
+                            <label for="rating5">&#10025</label>
+                            <input type="radio" id="review-rating4" name="rating" value="4" aria-checked="false" tabindex="-1" aria-label="slightly satisfied">
+                            <label for="rating4">&#10025</label>
+                            <input type="radio" id="review-rating3" name="rating" value="3" aria-checked="false" tabindex="-1" aria-label="moderatel satisfied">
+                            <label for="rating3">&#10025</label>
+                            <input type="radio" id="review-rating2" name="rating" value="2" aria-checked="false" tabindex="-1" aria-label="very satisfied">
+                            <label for="rating2">&#10025</label>
+                            <input type="radio" id="review-rating1" name="rating" value="1" aria-checked="false" tabindex="0" aria-label="extremely staisfied">
+                            <label for="rating1">&#10025</label>
+
+                        </div>
+                    </p>
+                </div>
+                <label for="comment">Review:</label>
+                <textarea name="comment" id="comment" aria-label="Review" cols="40" rows="6" placeholder="Write here.." required></textarea><br>
+                <button id="submit" type="submit" value="Submit Review">Post</button>
+            </form>
+
         </section>
         <!-- End review form -->
+
+        <div id="snackbar">There is no Internet connection your review will be posted when connection is re-established :( ..</div>
     </main>
     <!-- End main -->
 
@@ -72,9 +102,11 @@
     <!-- End footer -->
 
     <!-- Beginning scripts -->
+    <script src="js/lazyload.min.js"></script>
     <!-- Database helpers -->
     <script type="application/javascript" src="js/idb.js"></script>
     <script type="text/javascript" src="js/dbhelper.js"></script>
+    <!--script type="application/javascript" charset="utf-8" src="/js/idbhelper.js"></script>
     <!-- Main javascript file -->
     <script type="text/javascript" src="js/restaurant_info.js"></script>
     <script charset="utf-8" src="js/swController.js"></script>

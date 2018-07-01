@@ -1,4 +1,5 @@
 let restaurant;
+let reviews;
 var map;
 
 /**
@@ -46,11 +47,36 @@ fetchRestaurantFromURL = (callback) => {
 }
 
 /**
+ * Fetch Reviews on first load
+ * **/
+
+fetchReviews = () => {
+    console.log("Fetching Reviews");
+    const id = parseInt(getParameterByName('id'));
+    if (!id) {
+        console.log('No review id in URL');
+        return;
+    }
+    console.log(id);
+    DBHelper.fetchReviewsForRestaurant(id, (err, reviews) => {
+        self.reviews = reviews;
+        if (err || !reviews) {
+            console.log('REVIEWS: fetching error ', err);
+            return;
+        }
+        fillReviewsHTML();
+    });
+}
+
+/**
  * Create restaurant HTML and add it to the webpage
  */
 fillRestaurantHTML = (restaurant = self.restaurant) => {
     const name = document.getElementById('restaurant-name');
     name.innerHTML = restaurant.name;
+
+
+    fillRestaurantFavoriteHTML();
 
     const address = document.getElementById('restaurant-address');
     address.innerHTML = restaurant.address;
@@ -74,12 +100,8 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
     if (restaurant.operating_hours) {
         fillRestaurantHoursHTML();
     }
-
-    // fill reviews
-    fillReviewsHTML();
-
-
-    createReviewFormHTML();
+    DBHelper.waitingReviews();
+    fetchReviews();
     return picture;
 }
 
@@ -130,7 +152,7 @@ fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => 
 /**
  * Create all reviewForm HTML and add them to the webpage.
  */
-fillReviewsHTML = (reviews = self.restaurant.reviews) => {
+fillReviewsHTML = (reviews = self.reviews) => {
     const container = document.getElementById('reviews-container');
     const title = document.createElement('h2');
     title.innerHTML = 'Reviews';
@@ -227,83 +249,75 @@ linkMain.className = 'skip-main';
 
 skipNav.prepend(linkMain);
 
+
 /**
- * @description Create a div for writing a review
+ * @description add/remove your favorite restaurent
  */
-createReviewFormHTML = (id = self.restaurant.id) => {
-    const formContainer = document.getElementById('review-form');
+fillRestaurantFavoriteHTML = (is_favorite = self.restaurant.is_favorite, id = self.restaurant.id) => {
+    const favorite = document.getElementById('restaurant-favorite');
 
-    const createform = document.createElement('form');
-    createform.setAttribute('id', 'restoForm');
-    createform.setAttribute('onsubmit', `DBHelper.saveOfflineReview(event, this);`);
+    let btn = document.createElement('button');
+    btn.setAttribute('id', 'button-favorite');
 
-    const heading = document.createElement('h2');
-    heading.innerHTML = 'Write A Review:';
-    createform.appendChild(heading);
-
-    const hiddenRestaurantId = document.createElement('input');
-    hiddenRestaurantId.setAttribute('type', 'hidden');
-    hiddenRestaurantId.setAttribute('name', 'id');
-    hiddenRestaurantId.setAttribute('value', `${id}`);
-    createform.appendChild(hiddenRestaurantId);
-
-    const hiddenReviewDate = document.createElement('input');
-    unixTime = Math.round(Date.now());
-    hiddenReviewDate.setAttribute('type', 'hidden');
-    hiddenReviewDate.setAttribute('name', 'ddate');
-    hiddenReviewDate.setAttribute('value', `${unixTime}`);
-    createform.appendChild(hiddenReviewDate);
-
-    const hiddenFlag = document.createElement('input');
-    hiddenFlag.setAttribute('type', 'hidden');
-    hiddenFlag.setAttribute('name', 'dflag');
-    hiddenFlag.setAttribute('value', 'unsynced');
-    createform.appendChild(hiddenFlag);
-
-    const name = document.createElement('p');
-    name.innerHTML = 'Name: ';
-    createform.appendChild(name);
-
-    const inputelement = document.createElement('input');
-    inputelement.setAttribute('type', 'text');
-    inputelement.setAttribute('name', 'dname');
-    inputelement.setAttribute('placeholder', 'eg. Kevin Mitnick');
-    inputelement.setAttribute('aria-label', 'reviewer name');
-    createform.appendChild(inputelement);
-
-    const ratingelement = document.createElement('p');
-    ratingelement.innerHTML = 'Rate: ';
-    createform.appendChild(ratingelement);
-
-
-    for (var i = 0; i < 5; i++) {
-        const stars = document.createElement('span');
-        stars.id = 'stars';
-        stars.innerHTML = '&#10025';
-        ratingelement.appendChild(stars);
+    if (is_favorite == 'true') {
+        btn.className = 'fas fa-heart';
+        btn.innerHTML = ' Remove from Favorite';
+        btn.setAttribute('onclick', `DBHelper.toggleFavorite(${id}, false);`);
+    } else {
+        btn.className = 'far fa-heart';
+        btn.innerHTML = 'Add to Favorite';
+        btn.setAttribute('onclick', `DBHelper.toggleFavorite(${id}, true);`);
     }
+    favorite.appendChild(btn);
+};
 
 
-    const ratingbreak = document.createElement('br');
-    createform.appendChild(ratingbreak);
+let form = document.querySelector('#review-form');
+form.addEventListener('submit', e => {
+    e.preventDefault();
+    const body = {
+        "restaurant_id": parseInt(getParameterByName('id')),
+        "name": document.getElementById('name').value,
+        "date": "July 01, 2018",
+        "rating": parseInt(document.querySelector('input[name="rating"]:checked').value),
+        "comments": document.getElementById('comment').value
+    };
+    const ul = document.getElementById('reviews-list');
 
-    const review = document.createElement('p');
-    review.innerHTML = 'Review: ';
-    createform.appendChild(review);
+    if (navigator.onLine) {
+        DBHelper.postReview(body);
+        body.createdAt = new Date();
+        body.updatedAt = new Date();
+        ul.appendChild(createReviewHTML(body));
 
-    const texareaelement = document.createElement('textarea');
-    texareaelement.setAttribute('name', 'dreview');
-    texareaelement.setAttribute('placeholder', 'Please write your review');
-    texareaelement.setAttribute('aria-label', 'restaurant review');
-    createform.appendChild(texareaelement);
+    } else {
 
-    const reviewbreak = document.createElement('br');
-    createform.appendChild(reviewbreak);
+        body['updatedAt'] = new Date().getTime();
+        body['createdAt'] = new Date().getTime();
+        body['flag'] = 'unsynced'
+        DBHelper.postReview(body);
+        ul.appendChild(createReviewHTML(body));
 
-    const more = document.createElement('a');
-    more.innerHTML = 'Comment';
-    more.setAttribute('aria-label', 'Save comment')
-    createform.appendChild(more);
+        //notify user that there is no internet connection and his data will be saved once he go back online
+        var x = document.getElementById("snackbar");
+        x.className = "show";
+        setTimeout(function() { x.className = x.className.replace("show", ""); }, 3000);
+    }
+    form.reset();
 
-    formContainer.appendChild(createform);
+});
+
+
+/**
+ * Register service worker
+ */
+registerServiceWorker = () => {
+    navigator.serviceWorker.register('/sw.js')
+        .then(reg => {
+            document.getElementById('restoForm').addEventListener('submit', () => {
+                reg.sync.register('review-sync')
+                    .then(() => console.log('Registration succeeded. Scope is ' + reg.scope));
+            })
+        })
+        .catch(err => console.log('Registration failed with ' + err));
 }
